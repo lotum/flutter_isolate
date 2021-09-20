@@ -41,26 +41,11 @@ static NSString* _isolatePluginRegistrantClassName;
 + (void)setIsolatePluginRegistrantClassName:(NSString*)value { _isolatePluginRegistrantClassName = value; }
 
 + (Class)lookupGeneratedPluginRegistrant {
-    const char* classNameToCompare = "GeneratedPluginRegistrant";
+    NSString* className = @"GeneratedPluginRegistrant";
     if (_isolatePluginRegistrantClassName != nil) {
-        classNameToCompare = [_isolatePluginRegistrantClassName UTF8String];
+        className = _isolatePluginRegistrantClassName;
     }
-
-    Class class = nil;
-    Class * classes = NULL;
-    int classCount = objc_getClassList(NULL, 0);
-    if (classCount) {
-        classes = (Class*) malloc(sizeof(Class) * classCount);
-        classCount = objc_getClassList(classes, classCount);
-        for (int i = 0; i < classCount; i++) {
-            const char* name = class_getName(classes[i]);
-            if (strcmp(name, classNameToCompare) == 0){
-                class = classes[i];
-            }
-        }
-        free(classes);
-    }
-    return class;
+    return NSClassFromString(className);
 }
 
 
